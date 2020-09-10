@@ -1,43 +1,98 @@
 <!doctype html>
-<html dir="[direction]" lang="[language]" class="[class names]">
+<html lang="en" charset="utf-8">
 	<head>
-		[meta elements]
-
-		[link elements]
-
-		[style elements]
-
-		[script elements]
-
-		<title>Steve's Site of Many Help Desk things</title>
+		<title>Stephan's Site of Many Help Desk things</title>
+		
+		<link rel="stylesheet" type="text/css" href="css/wx.css" />
+		
+		<script src="libs/jquery-3.4.1"></script>
 	</head>
 	<body>
 		<h2>Days since we called POA</h2>
 		
-		<h2>Reasons why we miss troy</h2>
+		<h2>Reasons why we miss TojanHorse</h2>
+		<!-- A snip pet from https://codepen.io/chezzwizz/pen/yzdXrq -->
+		
+		<div class="wxContainer" hidden>
+  			<div class="wxInner">
+    				<div id="coords">
+      					<div>Latitude: <span id="wxLatitude"></span></div>
+      					<div>Longitude: <span id="wxLongitude"></span></div>
+				</div>
+    				<div id="wxWeather">
+      					<div>Weather: <span id="wxDescription"></span></div>
+   				</div>
+    				<div id="main">
+      					<div>Temperature: <span id="wxTemperature"></span></div>
+      					<div>Humidity: <span id="wxHumidity"></span></div>
+    				</div>
+  				</div>
+			</div>
+		
 		<script type="text/javascript">
-    			
     			function clickME() {
-                
-                    
-                }
+				$("document").ready(() => {
+			  		getWeather();
+				});
+
+				$("#wxTemperature").on("click", () => {
+				  showFahrenheit = !showFahrenheit;
+
+				  $("#wxTemperature").html(getTemperatureString());
+				});
+			}
+		
+			var showFahrenheit = true;
+			var temperature = 0;
+
+			var getTemperatureString = function() {
+			  var t = Math.round(temperature) + "&deg;C";
+			  if (showFahrenheit) {
+			    t = Math.round(temperature * 1.8 + 32);
+			    t += "&deg;F";
+			  }
+
+			  return t;
+			};
+
+			var getWeather = function() {
+			  navigator.geolocation.getCurrentPosition(pos => {
+			    $.ajax({
+			      url: "https://fcc-weather-api.glitch.me/api/current",
+			      data: {
+				lat: pos.coords.latitude,
+				lon: pos.coords.longitude
+			      },
+			      type: "GET",
+			      dataType: "json"
+			    }).done(json => {
+			      $("#wxLatitude").text(json.coord.lat);
+			      $("#wxLongitude").text(json.coord.lon);
+			      $("#wxDescription").text(json.weather[0].description);
+			      $("#wxWeather").append($("<img/>").attr("src", json.weather[0].icon));
+			      temperature = json.main.temp;
+			      $("#wxTemperature").html(getTemperatureString());
+			      $("#wxHumidity").text(json.main.humidity);
+			    });
+			  });
+			};
 		</script>
 	    	
-		<button type="button" onClick="">I thought about Troy</button>
+		<button type="button" onClick="">I thought about TojanHorse</button>
 		<p>Clicks: <a id="">0</a></p>
 
 		<br /> 
 		<textarea rows ="5" cols="50">
 		</textarea>
         <button type="button" onClick="">Submit</button>
-		<h2>Days til Mike leaves</h2>
+		<h2>Days til SETI discovers life on another planet.</h2>
 		
 		<h2 id="countDown"></h2>
 
 			<script>
 			//http://www.w3schools.com/howto/howto_js_countdown.asp and needs to be modified
 			// Set the date we're counting down to
-				var aDate = new Date("Mar 3, 2017 15:37:25").getTime();
+				var aDate = new Date("August 1, 2019 4:30:00:00").getTime();
 
 			// Update the count down every 1 second
 				var x = setInterval(function() {
